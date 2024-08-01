@@ -1,3 +1,5 @@
+
+import 'package:athena_ai/feature/welcome/welcome_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,6 +20,8 @@ void _initLoggy() {
         stackTraceLevel: LogLevel.warning,
       ),
       logPrinter: const PrettyPrinter());
+
+      debugPrint("Loggy loaded sucessfully...............");
 }
 
 void _initgoogleFonts() {
@@ -35,8 +39,8 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    return const MaterialApp(
+      home: WelcomePage()
     );
   }
 }
