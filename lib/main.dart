@@ -1,4 +1,5 @@
 
+import 'package:athena_ai/core/app/style.dart';
 import 'package:athena_ai/feature/welcome/welcome_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -39,8 +40,9 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: WelcomePage()
+    return  MaterialApp(
+      theme: darkTheme,
+      home: const WelcomePage()
     );
   }
 }

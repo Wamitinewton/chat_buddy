@@ -2,6 +2,7 @@ import 'package:athena_ai/core/config/assets_constants.dart';
 import 'package:athena_ai/core/extension/context.dart';
 import 'package:athena_ai/feature/home/widgets/background_curves_painter.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class WelcomePage extends StatelessWidget {
   const WelcomePage({super.key});
@@ -67,13 +68,38 @@ class WelcomePage extends StatelessWidget {
                             width: 4,
                           ),
                           Image.asset(
-                            "assets/images/ai_star_logo.png",
+                            AssetConstants.aiStarLogo,
                             scale: 23,
                           )
                         ],
                       ),
                     ),
-                  )
+                  ),
+
+                  Lottie.asset(
+                    AssetConstants.onboardingAnimation
+                  ),
+                  Text(
+                    'Chat with PDF & Images',
+                    style: context.textTheme.bodyLarge!.copyWith(
+                      fontSize: 32,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 1.5
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: (){}, 
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: context.colorScheme.onSurface,
+                      minimumSize: const Size(double.infinity, 56)
+                    ),
+                    child:  Text(
+                      "Get Started",
+                      style: context.textTheme.labelLarge!.copyWith(
+                        color: context.colorScheme.surface
+                      ),
+                    )
+                    )
                 ],
               ),
             )
