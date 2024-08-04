@@ -1,3 +1,4 @@
+import 'package:athena_ai/core/util/validators.dart';
 import 'package:flutter/material.dart';
 
 class InputField extends StatefulWidget {
@@ -23,7 +24,7 @@ class InputField extends StatefulWidget {
         textInputAction: textInputAction,
         textInputType: TextInputType.url,
         autofillHints: const [AutofillHints.url],
-        
+        validator: Validators.apiKey
       );
 
   final TextEditingController controller;
