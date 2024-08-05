@@ -1,7 +1,10 @@
 import 'package:athena_ai/core/extension/context.dart';
+import 'package:athena_ai/core/navigation/route.dart';
 import 'package:athena_ai/core/ui/input/input_field.dart';
 import 'package:athena_ai/core/util/securestorage.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ApiKeyBottomSheet extends StatefulWidget {
   const ApiKeyBottomSheet(
@@ -48,7 +51,7 @@ class _ApiKeyBottomSheetState extends State<ApiKeyBottomSheet> {
                   height: 16,
                 ),
                 ElevatedButton(
-                    onPressed: () async{
+                    onPressed: () async {
                       if (!_formKey.currentState!.validate()) {
                         return;
                       }
@@ -62,6 +65,12 @@ class _ApiKeyBottomSheetState extends State<ApiKeyBottomSheet> {
                       setState(() {
                         isLoading = false;
                       });
+
+                      if (widget.isCalledFromHomePage) {
+                        context.pop();
+                      } else {
+                        AppRoute.home.go(context);
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: context.colorScheme.onSurface,
@@ -74,7 +83,23 @@ class _ApiKeyBottomSheetState extends State<ApiKeyBottomSheet> {
                             'submit',
                             style: context.textTheme.labelLarge!
                                 .copyWith(color: context.colorScheme.surface),
-                          ))
+                          )),
+                const SizedBox(
+                  height: 16,
+                ),
+                InkWell(
+                  onTap: () => launchUrl(
+                      Uri.parse('https://makersuite.google.com/app/apikey')),
+                  child: Text(
+                    'Get your gemini API Key from here',
+                    style: context.textTheme.labelMedium!.copyWith(
+                      color: Colors.blue,
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 16,
+                ),
               ],
             ),
           ),
