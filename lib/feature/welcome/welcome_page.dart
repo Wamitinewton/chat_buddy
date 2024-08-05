@@ -1,6 +1,7 @@
 import 'package:athena_ai/core/config/assets_constants.dart';
 import 'package:athena_ai/core/extension/context.dart';
 import 'package:athena_ai/feature/home/widgets/background_curves_painter.dart';
+import 'package:athena_ai/feature/welcome/widgets/api_key_bottom_sheet.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -88,7 +89,25 @@ class WelcomePage extends StatelessWidget {
                     ),
                   ),
                   ElevatedButton(
-                    onPressed: (){}, 
+                    onPressed: (){
+                      final TextEditingController apiKeyController = 
+                      TextEditingController();
+
+                      showModalBottomSheet<void>(
+                        context: context,
+                        isScrollControlled: true, 
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.vertical(
+                            top: Radius.circular(20)
+                          )
+                        ),
+                        builder: (context){
+                          return ApiKeyBottomSheet(
+                            apiKeyController: apiKeyController, 
+                            isCalledFromHomePage: false);
+                        }
+                        );
+                    }, 
                     style: ElevatedButton.styleFrom(
                       backgroundColor: context.colorScheme.onSurface,
                       minimumSize: const Size(double.infinity, 56)
