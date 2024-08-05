@@ -1,4 +1,3 @@
-
 import 'package:athena_ai/core/app/app.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +10,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   _initLoggy();
   _initgoogleFonts();
-  runApp(
-    const ProviderScope(
-      child: NewtonAIBuddy()
-      )
-    );
+  runApp(const ProviderScope(child: NewtonAIBuddy()));
 }
 
 void _initLoggy() {
@@ -26,7 +21,7 @@ void _initLoggy() {
       ),
       logPrinter: const PrettyPrinter());
 
-      debugPrint("Loggy loaded sucessfully...............");
+  debugPrint("Loggy loaded sucessfully...............");
 }
 
 void _initgoogleFonts() {
@@ -37,4 +32,3 @@ void _initgoogleFonts() {
     yield LicenseEntryWithLineBreaks(['google_fonts'], licence);
   });
 }
-
