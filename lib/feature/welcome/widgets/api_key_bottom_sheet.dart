@@ -1,5 +1,6 @@
 import 'package:athena_ai/core/extension/context.dart';
 import 'package:athena_ai/core/ui/input/input_field.dart';
+import 'package:athena_ai/core/util/securestorage.dart';
 import 'package:flutter/material.dart';
 
 class ApiKeyBottomSheet extends StatefulWidget {
@@ -47,7 +48,21 @@ class _ApiKeyBottomSheetState extends State<ApiKeyBottomSheet> {
                   height: 16,
                 ),
                 ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () async{
+                      if (!_formKey.currentState!.validate()) {
+                        return;
+                      }
+                      context.closeKeyboard();
+                      final apiKey = widget.apiKeyController.text;
+
+                      setState(() {
+                        isLoading = true;
+                      });
+                      await Securestorage().storeApiKey(apiKey);
+                      setState(() {
+                        isLoading = false;
+                      });
+                    },
                     style: ElevatedButton.styleFrom(
                         backgroundColor: context.colorScheme.onSurface,
                         minimumSize: const Size(double.infinity, 50)),

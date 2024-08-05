@@ -76,49 +76,39 @@ class WelcomePage extends StatelessWidget {
                       ),
                     ),
                   ),
-
-                  Lottie.asset(
-                    AssetConstants.onboardingAnimation
-                  ),
+                  Lottie.asset(AssetConstants.onboardingAnimation),
                   Text(
                     'Chat with PDF & Images',
                     style: context.textTheme.bodyLarge!.copyWith(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 1.5
-                    ),
+                        fontSize: 32,
+                        fontWeight: FontWeight.w600,
+                        letterSpacing: 1.5),
                   ),
                   ElevatedButton(
-                    onPressed: (){
-                      final TextEditingController apiKeyController = 
-                      TextEditingController();
+                      onPressed: () {
+                        final TextEditingController apiKeyController =
+                            TextEditingController();
 
-                      showModalBottomSheet<void>(
-                        context: context,
-                        isScrollControlled: true, 
-                        shape: const RoundedRectangleBorder(
-                          borderRadius: BorderRadius.vertical(
-                            top: Radius.circular(20)
-                          )
-                        ),
-                        builder: (context){
-                          return ApiKeyBottomSheet(
-                            apiKeyController: apiKeyController, 
-                            isCalledFromHomePage: false);
-                        }
-                        );
-                    }, 
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: context.colorScheme.onSurface,
-                      minimumSize: const Size(double.infinity, 56)
-                    ),
-                    child:  Text(
-                      "Get Started",
-                      style: context.textTheme.labelLarge!.copyWith(
-                        color: context.colorScheme.surface
-                      ),
-                    )
-                    )
+                        showModalBottomSheet<void>(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(20))),
+                            builder: (context) {
+                              return ApiKeyBottomSheet(
+                                  apiKeyController: apiKeyController,
+                                  isCalledFromHomePage: false);
+                            });
+                      },
+                      style: ElevatedButton.styleFrom(
+                          backgroundColor: context.colorScheme.onSurface,
+                          minimumSize: const Size(double.infinity, 56)),
+                      child: Text(
+                        "Get Started",
+                        style: context.textTheme.labelLarge!
+                            .copyWith(color: context.colorScheme.surface),
+                      ))
                 ],
               ),
             )
