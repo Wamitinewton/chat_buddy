@@ -1,16 +1,27 @@
-# athena_ai
+# PERSONAL AI
 
-A new Flutter project.
+this is a flutter application which uses Gemini genarative AI model
+to chat with PDF Files, Text AI, and Images
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## How to run this example
+* clone into the repository
+```bash
+git clone https://github.com/Wamitinewton/my_ai.git
+```
+* navigate to the package root folder
+``` bash
+cd your/projects/folder/secure_sec
+```
+* open in code or android studio
+* get all the dependencies
+```bash
+flutter pub get
+```
+* launch the main file
+```bash
+flutter run --release
+```
+* You can also build the APK
+```bash
+flutter build apk
+```
