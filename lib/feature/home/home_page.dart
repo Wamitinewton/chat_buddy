@@ -1,6 +1,9 @@
 import 'package:athena_ai/core/config/assets_constants.dart';
 import 'package:athena_ai/core/extension/context.dart';
+import 'package:athena_ai/core/util/securestorage.dart';
 import 'package:athena_ai/feature/home/widgets/background_curves_painter.dart';
+import 'package:athena_ai/feature/welcome/widgets/api_key_bottom_sheet.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -43,7 +46,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
+                    const SizedBox(
                       width: 60,
                     ),
                     Container(
@@ -78,9 +81,58 @@ class _HomePageState extends ConsumerState<HomePage> {
                           )
                         ],
                       ),
+                    ),
+                    CircleAvatar(
+                      maxRadius: 16,
+                      backgroundColor: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.2),
+                      child: IconButton(
+                        icon: const Icon(
+                          CupertinoIcons.settings,
+                          size: 18,
+                        ),
+                        style: IconButton.styleFrom(
+                          padding: EdgeInsets.zero
+                        ),
+                        onPressed: () async {
+                          final apiKey = await Securestorage().getApiKey();
+                          final TextEditingController apiKeyController =
+                              TextEditingController(text: apiKey);
+                          await showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20))),
+                              builder: (context) {
+                                return ApiKeyBottomSheet(
+                                    apiKeyController: apiKeyController,
+                                    isCalledFromHomePage: true);
+                              });
+                        },
+                      ),
                     )
                   ],
-                )
+                ),
+               const SizedBox(
+                  height: 16,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'How may I help\nyou today?',
+                      style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(fontSize: 32),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32,)
               ],
             ),
           )
