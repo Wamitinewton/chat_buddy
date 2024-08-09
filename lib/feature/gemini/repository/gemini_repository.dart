@@ -255,19 +255,17 @@ If you don't know the answer, just say "I don't know" or "I'm not sure".
   @override
   double calculateEclideanDistance(
       {required List<num> vectorA, required List<num> vectorB}) {
-        try {
-          assert(
-            vectorA.length == vectorB.length,
-            'Vectors must be of the same length'
-          );
-          double sum = 0;
-          for (int i = 0; i < vectorA.length; i++) {
-            sum += (vectorA[i] - vectorB[i]) * (vectorA[i] - vectorB[i]);
-          }
-          return sqrt(sum);
-        } catch (e) {
-          logError('Error in calculating Euclidean distance: $e');
-          rethrow;
-        }
+    try {
+      assert(vectorA.length == vectorB.length,
+          'Vectors must be of the same length');
+      double sum = 0;
+      for (int i = 0; i < vectorA.length; i++) {
+        sum += (vectorA[i] - vectorB[i]) * (vectorA[i] - vectorB[i]);
+      }
+      return sqrt(sum);
+    } catch (e) {
+      logError('Error in calculating Euclidean distance: $e');
+      rethrow;
+    }
   }
 }
