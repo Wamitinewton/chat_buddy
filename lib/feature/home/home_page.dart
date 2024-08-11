@@ -225,7 +225,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                         return HistoryItem(
                           label: 'I love you my generative AI',
                           imagePath: AssetConstants.textLogo,
-                          color: context.colorScheme.secondary,
+                          color: context.colorScheme.secondary, chatBot: null,
                         );
                       }, 
                       separatorBuilder: (_, __) =>

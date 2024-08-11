@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:js_interop';
 
 import 'package:athena_ai/feature/gemini/repository/gemini_repository.dart';
 import 'package:athena_ai/feature/hive/repository/hive_repository.dart';
@@ -9,6 +8,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 import '../../hive/model/chat_bot/chat_bot.dart';
+
+final chatBotListProvider =
+    StateNotifierProvider<ChatBotListNotifier, List<ChatBot>>(
+        (ref) => ChatBotListNotifier());
 
 class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
   ChatBotListNotifier() : super([]) {

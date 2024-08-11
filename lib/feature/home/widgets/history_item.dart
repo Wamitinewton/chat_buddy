@@ -1,23 +1,28 @@
 import 'package:athena_ai/core/extension/context.dart';
+import 'package:athena_ai/feature/hive/model/chat_bot/chat_bot.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class HistoryItem extends StatelessWidget {
+class HistoryItem extends ConsumerWidget {
   const HistoryItem(
       {super.key,
       required this.label,
       required this.imagePath,
-      required this.color});
+      required this.color,
+      required this.chatBot});
 
   final String label;
   final String imagePath;
   final Color color;
+  final ChatBot chatBot;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: ElevatedButton(
-        onPressed: () {},
+        onPressed: () {
+        },
         style: ElevatedButton.styleFrom(
             backgroundColor: context.colorScheme.surface,
             foregroundColor: color,
