@@ -61,7 +61,8 @@ class ChatPage extends ConsumerWidget {
                     decoration: BoxDecoration(
                         gradient: RadialGradient(colors: [
                       color.withOpacity(0.5),
-                      context.colorScheme.surface.withOpacity(0.5)
+                      // ignore: deprecated_member_use
+                      context.colorScheme.background.withOpacity(0.5)
                     ])),
                   )),
               CustomPaint(

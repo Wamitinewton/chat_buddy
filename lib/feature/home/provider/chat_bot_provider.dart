@@ -65,7 +65,7 @@ class ChatBotListNotifier extends StateNotifier<List<ChatBot>> {
   Future<Map<String, List<num>>> batchEmbedChunks(
     List<String> textChuks,
   ) async {
-    final response = geminiRepository.batchEmbedeChunks(textChuks: textChuks);
+    final response = geminiRepository.batchEmbedeChunks(textChunks: textChuks);
     return response;
   }
 

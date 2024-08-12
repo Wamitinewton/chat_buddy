@@ -14,7 +14,7 @@ abstract class BaseGeminiRepository {
     required Map<String, List<num>>? embeddings,
   });
   Future<Map<String, List<num>>> batchEmbedeChunks({
-    required List<String> textChuks,
+    required List<String> textChunks,
   });
   double calculateEclideanDistance({
     required List<num> vectorA,

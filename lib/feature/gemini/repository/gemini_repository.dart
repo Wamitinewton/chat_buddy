@@ -17,29 +17,37 @@ class GeminiRepository extends BaseGeminiRepository {
   static const baseUrl =
       'https://generativelanguage.googleapis.com/v1beta/models';
 
+  /// Streams content from the Gemini API based on the provided content
+  /// and optional image.
+  /// This method is used to generate content dynamically, potentially
+  /// including image analysis.
   @override
-  Stream<Candidates> streamContent(
-      {required Content content, Uint8List? image}) async* {
+  Stream<Candidates> streamContent({
+    required Content content,
+    Uint8List? image,
+  }) async* {
     try {
-      final geminiApiKey = await Securestorage().getApiKey();
+      final geminiAPIKey = await Securestorage().getApiKey();
       Object? mapData = {};
-
       final model = image == null ? 'gemini-pro' : 'gemini-pro-vision';
       if (image == null) {
         mapData = {
           'contents': [
             {
-              'parts':
-                  content.parts?.map((part) => {'text': part.text}).toList() ??
-                      [],
-            }
+              'parts': content.parts
+                      ?.map(
+                        (part) => {'text': part.text},
+                      )
+                      .toList() ??
+                  [],
+            },
           ],
           'safetySettings': [
             {
               'category': 'HARM_CATEGORY_DANGEROUS_CONTENT',
               'threshold': 'BLOCK_ONLY_HIGH',
             }
-          ]
+          ],
         };
       } else {
         final text = content.parts?.last.text;
@@ -55,7 +63,7 @@ class GeminiRepository extends BaseGeminiRepository {
                   },
                 },
               ],
-            },
+            }
           ],
           'safetySettings': [
             {
@@ -66,13 +74,14 @@ class GeminiRepository extends BaseGeminiRepository {
         };
       }
       final response = await dio.post(
-        '$baseUrl/$model:streamGenerateContent?key=$geminiApiKey',
+        '$baseUrl/$model:streamGenerateContent?key=$geminiAPIKey',
         options: Options(
           headers: {'Content-Type': 'application/json'},
           responseType: ResponseType.stream,
         ),
         data: jsonEncode(mapData),
       );
+
       if (response.statusCode == 200) {
         final ResponseBody rb = response.data as ResponseBody;
         int index = 0;
@@ -94,8 +103,9 @@ class GeminiRepository extends BaseGeminiRepository {
           }
 
           res = res.trim();
+
           if (index == 0 && res.startsWith('[')) {
-            res.replaceFirst('[', '');
+            res = res.replaceFirst('[', '');
           }
           if (res.startsWith(',')) {
             res = res.replaceFirst(',', '');
@@ -110,7 +120,7 @@ class GeminiRepository extends BaseGeminiRepository {
             if (modelStr == '' && line == ',') {
               continue;
             }
-
+            // ignore: use_string_buffers
             modelStr += line;
             try {
               final candidate = Candidates.fromJson(
@@ -136,38 +146,39 @@ class GeminiRepository extends BaseGeminiRepository {
   /// which are then returned in a map.
   /// This method is useful for pre-processing text data for
   /// further analysis or comparison.
-
   @override
-  Future<Map<String, List<num>>> batchEmbedeChunks(
-      {required List<String> textChuks}) async {
+  Future<Map<String, List<num>>> batchEmbedeChunks({
+    required List<String> textChunks,
+  }) async {
     try {
-      final geminiApiKey = await Securestorage().getApiKey();
+      final geminiAPIKey = await Securestorage().getApiKey();
       final Map<String, List<num>> embeddingsMap = {};
       const int chunkSize = 100;
 
-      for (int i = 0; i < textChuks.length; i += chunkSize) {
-        final chunckEnd = (i + chunkSize < textChuks.length)
+      for (int i = 0; i < textChunks.length; i += chunkSize) {
+        final chunkEnd = (i + chunkSize < textChunks.length)
             ? i + chunkSize
-            : textChuks.length;
-        final List<String> currentChunk = textChuks.sublist(1, chunckEnd);
+            : textChunks.length;
+        final List<String> currentChunk = textChunks.sublist(i, chunkEnd);
         final response = await dio.post(
-            '$baseUrl/embedding-001:batchEmbedContents?key=$geminiApiKey',
-            options: Options(headers: {'Content-Type': 'application/json'}),
-            data: {
-              'requests': currentChunk
-                  .map(
-                    (text) => {
-                      'model': 'models/embedding-001',
-                      'content': {
-                        'parts': [
-                          {'text': text},
-                        ],
-                      },
-                      'taskType': 'RETRIEVAL_DOCUMENT',
+          '$baseUrl/embedding-001:batchEmbedContents?key=$geminiAPIKey',
+          options: Options(headers: {'Content-Type': 'application/json'}),
+          data: {
+            'requests': currentChunk
+                .map(
+                  (text) => {
+                    'model': 'models/embedding-001',
+                    'content': {
+                      'parts': [
+                        {'text': text},
+                      ],
                     },
-                  )
-                  .toList(),
-            });
+                    'taskType': 'RETRIEVAL_DOCUMENT',
+                  },
+                )
+                .toList(),
+          },
+        );
         final results = response.data['embeddings'];
 
         for (var j = 0; j < currentChunk.length; j++) {
@@ -182,14 +193,19 @@ class GeminiRepository extends BaseGeminiRepository {
     }
   }
 
+  /// Generates a prompt for embedding based on the user's input and
+  /// the pre-calculated embeddings.
+  /// This method is designed to facilitate user interaction by
+  /// providing contextually relevant prompts.
   @override
-  Future<String> promptForEmbedding(
-      {required String userPrompt,
-      required Map<String, List<num>>? embeddings}) async {
+  Future<String> promptForEmbedding({
+    required String userPrompt,
+    required Map<String, List<num>>? embeddings,
+  }) async {
     try {
-      final geminiApiKey = await Securestorage().getApiKey();
+      final geminiAPIKey = await Securestorage().getApiKey();
       final response = await dio.post(
-        '$baseUrl/embedding-001:embedContent?key=$geminiApiKey',
+        '$baseUrl/embedding-001:embedContent?key=$geminiAPIKey',
         options: Options(headers: {'Content-Type': 'application/json'}),
         data: jsonEncode({
           'model': 'models/embedding-001',
@@ -201,15 +217,16 @@ class GeminiRepository extends BaseGeminiRepository {
           'taskType': 'RETRIEVAL_QUERY',
         }),
       );
-      final currentembedding =
+      final currentEmbedding =
           (response.data['embedding']['values'] as List).cast<num>();
       if (embeddings == null) {
-        return 'ERROR: Embeding calculation failed or no embeddings in state. ';
+        return 'Error: Embedding calculation failed or no embeddings in state.';
       }
+
       final Map<String, double> distances = {};
       embeddings.forEach((key, value) {
         final double distance = calculateEclideanDistance(
-          vectorA: currentembedding,
+          vectorA: currentEmbedding,
           vectorB: value,
         );
         distances[key] = distance;
@@ -226,6 +243,7 @@ class GeminiRepository extends BaseGeminiRepository {
           mergedText.write('\n\n');
         }
       }
+
       final prompt = '''
 You're a chat with pdf ai assistance.
 
@@ -248,16 +266,24 @@ If you don't know the answer, just say "I don't know" or "I'm not sure".
       return prompt;
     } catch (e) {
       logError('Error in prompt generation: $e');
-      return 'An error occured, please try again';
+      return 'An error occurred, please try again.';
     }
   }
 
+  /// Calculates the Euclidean distance between two vectors,
+  /// providing a measure of similarity.
+  /// This method is essential for operations like finding
+  /// the closest embeddings.
   @override
-  double calculateEclideanDistance(
-      {required List<num> vectorA, required List<num> vectorB}) {
+  double calculateEclideanDistance({
+    required List<num> vectorA,
+    required List<num> vectorB,
+  }) {
     try {
-      assert(vectorA.length == vectorB.length,
-          'Vectors must be of the same length');
+      assert(
+        vectorA.length == vectorB.length,
+        'Vectors must be of the same length',
+      );
       double sum = 0;
       for (int i = 0; i < vectorA.length; i++) {
         sum += (vectorA[i] - vectorB[i]) * (vectorA[i] - vectorB[i]);
