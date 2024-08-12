@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:athena_ai/core/config/type_of_message.dart';
 import 'package:athena_ai/core/extension/context.dart';
 import 'package:athena_ai/feature/chat/provider/message_provider.dart';
@@ -43,7 +45,7 @@ class ChatInterfaceWidget extends ConsumerWidget {
           backgroundColor: Colors.transparent,
           primaryColor: context.colorScheme.onSurface,
           secondaryColor: color,
-          inputBackgroundColor: context.colorScheme.surface,
+          inputBackgroundColor: context.colorScheme.onBackground,
           inputTextColor: context.colorScheme.onSurface,
           sendingIcon: Icon(
             Icons.send,
@@ -51,12 +53,12 @@ class ChatInterfaceWidget extends ConsumerWidget {
           ),
           inputTextCursorColor: context.colorScheme.onSurface,
           receivedMessageBodyTextStyle: TextStyle(
-              color: context.colorScheme.surface,
+              color: context.colorScheme.onBackground,
               fontSize: 16,
               fontWeight: FontWeight.w500,
               height: 1.5),
           sentMessageBodyTextStyle: TextStyle(
-              color: context.colorScheme.surface,
+              color: context.colorScheme.onBackground,
               fontSize: 16,
               fontWeight: FontWeight.w500),
           dateDividerTextStyle: TextStyle(
@@ -74,7 +76,7 @@ class ChatInterfaceWidget extends ConsumerWidget {
               border: InputBorder.none,
               contentPadding: EdgeInsets.zero,
               isCollapsed: true,
-              fillColor: context.colorScheme.surface),
+              fillColor: context.colorScheme.onBackground),
           inputBorderRadius:
               const BorderRadius.vertical(top: Radius.circular(20))),
     );
