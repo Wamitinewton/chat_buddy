@@ -14,6 +14,9 @@ import 'package:athena_ai/feature/hive/repository/hive_repository.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 
+final messageListProvider = StateNotifierProvider<MessageListNotifier, ChatBot>(
+    (ref) => MessageListNotifier());
+
 class MessageListNotifier extends StateNotifier<ChatBot> {
   MessageListNotifier()
       : super(ChatBot(messagesList: [], id: '', title: '', typeOfBot: ''));
@@ -43,6 +46,7 @@ class MessageListNotifier extends StateNotifier<ChatBot> {
         chatBotId: state.id);
     await updateChatBotWithMessage(message);
     // call the get response by gemini in here ............................pendinggggggg
+    await getGeminiResponse(prompt: text, imageFilePath: imageFilePath);
   }
 
   Future<void> getGeminiResponse({
