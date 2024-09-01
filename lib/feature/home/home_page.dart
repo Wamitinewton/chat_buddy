@@ -322,7 +322,28 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 color: context.colorScheme.tertiary,
                                 imagePath: AssetConstants.imageLogo,
                                 isMainButton: false,
-                                onPressed: () {},
+                                onPressed: () async {
+                                  final pickedFile = await ref
+                                      .read(chatBotListProvider.notifier)
+                                      .attachImageFile();
+                                  if (pickedFile != null) {
+                                    final chatBot = ChatBot(
+                                      messagesList: [],
+                                      id: uuid.v4(),
+                                      title: '',
+                                      typeOfBot: TypeOfBot.image,
+                                      attachmentPath: pickedFile,
+                                    );
+                                    await ref
+                                        .read(chatBotListProvider.notifier)
+                                        .saveChatBot(chatBot);
+
+                                    await ref
+                                        .read(messageListProvider.notifier)
+                                        .updateChatBot(chatBot);
+                                    AppRoute.chat.push(context);
+                                  }
+                                },
                               )
                             ],
                           ))

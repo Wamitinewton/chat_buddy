@@ -1,5 +1,8 @@
 import 'package:athena_ai/core/extension/context.dart';
+import 'package:athena_ai/core/navigation/route.dart';
+import 'package:athena_ai/feature/chat/provider/message_provider.dart';
 import 'package:athena_ai/feature/hive/model/chat_bot/chat_bot.dart';
+import 'package:athena_ai/feature/home/provider/chat_bot_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,6 +25,8 @@ class HistoryItem extends ConsumerWidget {
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: ElevatedButton(
         onPressed: () {
+          ref.read(messageListProvider.notifier).updateChatBot(chatBot);
+          AppRoute.chat.push(context);
         },
         style: ElevatedButton.styleFrom(
             backgroundColor: context.colorScheme.surface,
@@ -57,7 +62,9 @@ class HistoryItem extends ConsumerWidget {
                       .withOpacity(0.95)),
             )),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                ref.read(chatBotListProvider.notifier).deleteChatBot(chatBot);
+              },
               icon: Icon(
                 Icons.delete,
                 color: context.colorScheme.onSurface,
