@@ -155,35 +155,36 @@ class GeminiRepository extends BaseGeminiRepository {
       final Map<String, List<num>> embeddingsMap = {};
       const int chunkSize = 100;
 
+      // Using gemini-pro model for embeddings instead
+      const String embeddingModel = 'gemini-pro';
+
       for (int i = 0; i < textChunks.length; i += chunkSize) {
         final chunkEnd = (i + chunkSize < textChunks.length)
             ? i + chunkSize
             : textChunks.length;
         final List<String> currentChunk = textChunks.sublist(i, chunkEnd);
-        final response = await dio.post(
-          '$baseUrl/embedding-001:batchEmbedContents?key=$geminiAPIKey',
-          options: Options(headers: {'Content-Type': 'application/json'}),
-          data: {
-            'requests': currentChunk
-                .map(
-                  (text) => {
-                    'model': 'models/embedding-001',
-                    'content': {
-                      'parts': [
-                        {'text': text},
-                      ],
-                    },
-                    'taskType': 'RETRIEVAL_DOCUMENT',
-                  },
-                )
-                .toList(),
-          },
-        );
-        final results = response.data['embeddings'];
-
-        for (var j = 0; j < currentChunk.length; j++) {
-          embeddingsMap[currentChunk[j]] =
-              (results![j]['values'] as List).cast<num>();
+        
+        // Process each chunk individually instead of batch embedding
+        for (final text in currentChunk) {
+          final response = await dio.post(
+            '$baseUrl/$embeddingModel:embedContent?key=$geminiAPIKey',
+            options: Options(headers: {'Content-Type': 'application/json'}),
+            data: {
+              'content': {
+                'parts': [
+                  {'text': text},
+                ],
+              },
+            },
+          );
+          
+          // Extract embedding values from response
+          if (response.data != null && 
+              response.data['embedding'] != null &&
+              response.data['embedding']['values'] != null) {
+            embeddingsMap[text] = 
+              (response.data['embedding']['values'] as List).cast<num>();
+          }
         }
       }
       return embeddingsMap;
@@ -204,19 +205,22 @@ class GeminiRepository extends BaseGeminiRepository {
   }) async {
     try {
       final geminiAPIKey = await Securestorage().getApiKey();
+      
+      // Using gemini-pro model for embeddings
+      const String embeddingModel = 'gemini-pro';
+      
       final response = await dio.post(
-        '$baseUrl/embedding-001:embedContent?key=$geminiAPIKey',
+        '$baseUrl/$embeddingModel:embedContent?key=$geminiAPIKey',
         options: Options(headers: {'Content-Type': 'application/json'}),
-        data: jsonEncode({
-          'model': 'models/embedding-001',
+        data: {
           'content': {
             'parts': [
               {'text': userPrompt},
             ],
           },
-          'taskType': 'RETRIEVAL_QUERY',
-        }),
+        },
       );
+      
       final currentEmbedding =
           (response.data['embedding']['values'] as List).cast<num>();
       if (embeddings == null) {
@@ -225,12 +229,21 @@ class GeminiRepository extends BaseGeminiRepository {
 
       final Map<String, double> distances = {};
       embeddings.forEach((key, value) {
-        final double distance = calculateEclideanDistance(
-          vectorA: currentEmbedding,
-          vectorB: value,
-        );
-        distances[key] = distance;
+        // Check if dimensionality matches
+        if (value.length == currentEmbedding.length) {
+          final double distance = calculateEclideanDistance(
+            vectorA: currentEmbedding,
+            vectorB: value,
+          );
+          distances[key] = distance;
+        } else {
+          logError('Embedding dimension mismatch for key: $key');
+        }
       });
+
+      if (distances.isEmpty) {
+        return 'Error: No compatible embeddings found for comparison.';
+      }
 
       final List<MapEntry<String, double>> sortedDistances = distances.entries
           .toList()
