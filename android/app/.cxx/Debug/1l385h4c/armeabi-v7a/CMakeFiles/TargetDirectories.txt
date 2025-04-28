@@ -1,0 +1,2 @@
+/home/newton/Desktop/chat_buddy/android/app/.cxx/Debug/1l385h4c/armeabi-v7a/CMakeFiles/edit_cache.dir
+/home/newton/Desktop/chat_buddy/android/app/.cxx/Debug/1l385h4c/armeabi-v7a/CMakeFiles/rebuild_cache.dir
